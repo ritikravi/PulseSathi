@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function PatternsPage() {
   const navigate = useNavigate();
-  const [selectedPattern, setSelectedPattern] = useState<any>(null);
   const [creating, setCreating] = useState(false);
 
   const { data: patternsData, refetch } = useQuery({
@@ -21,7 +20,6 @@ export default function PatternsPage() {
     try {
       await patterns.dismissPattern(patternId, 'User dismissed');
       refetch();
-      setSelectedPattern(null);
     } catch (error) {
       console.error('Failed to dismiss pattern:', error);
     }
