@@ -5,7 +5,7 @@ import { useAuthStore } from '../store/authStore';
 
 const api = axios.create({
   baseURL: import.meta.env.PROD 
-    ? 'https://pulseloop-backend.onrender.com/api'
+    ? 'https://pulseloop-backend-5il0.onrender.com/api'
     : '/api',
   headers: {
     'Content-Type': 'application/json',

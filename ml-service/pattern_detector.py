@@ -18,7 +18,7 @@ class PatternDetector:
     
     def __init__(self, mongodb_uri: str):
         self.client = MongoClient(mongodb_uri)
-        self.db = self.client.get_database()
+        self.db = self.client.get_database('pulseloop')
     
     def detect_patterns(
         self,
