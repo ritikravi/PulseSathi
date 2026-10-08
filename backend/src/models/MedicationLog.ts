@@ -47,6 +47,6 @@ const medicationLogSchema = new Schema<IMedicationLog>(
   }
 );
 
-glucoseReadingSchema.index({ patientId: 1, scheduledTime: -1 });
+medicationLogSchema.index({ patientId: 1, scheduledTime: -1 });
 
 export default mongoose.model<IMedicationLog>('MedicationLog', medicationLogSchema);
