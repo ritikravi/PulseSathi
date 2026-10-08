@@ -1,7 +1,8 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Activity, BarChart3, FlaskConical, History, User, LogOut, Menu, X } from 'lucide-react';
+import { Activity, BarChart3, FlaskConical, History, User, LogOut, Menu, X, Pill, MessageCircle, Users, Stethoscope } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useState } from 'react';
+import NotificationBell from './NotificationBell';
 
 export default function Layout() {
   const location = useLocation();
@@ -18,13 +19,30 @@ export default function Layout() {
     setMobileMenuOpen(false);
   };
 
-  const navigation = [
-    { name: 'Dashboard', href: '/', icon: Activity },
+  const patientNav = [
+    { name: 'Today', href: '/today', icon: Pill },
+    { name: 'WhatsApp', href: '/whatsapp', icon: MessageCircle },
+    { name: 'Dashboard', href: '/dashboard', icon: Activity },
     { name: 'Patterns', href: '/patterns', icon: BarChart3 },
-    { name: 'Experiments', href: '/experiments', icon: FlaskConical },
     { name: 'History', href: '/history', icon: History },
     { name: 'Profile', href: '/profile', icon: User },
   ];
+
+  const clinicianNav = [
+    { name: 'Patients', href: '/clinician', icon: Stethoscope },
+    { name: 'Profile', href: '/profile', icon: User },
+  ];
+
+  const caregiverNav = [
+    { name: 'Care Dashboard', href: '/caregiver', icon: Users },
+    { name: 'WhatsApp', href: '/whatsapp', icon: MessageCircle },
+    { name: 'Profile', href: '/profile', icon: User },
+  ];
+
+  const navigation =
+    user?.role === 'clinician' ? clinicianNav :
+    user?.role === 'caregiver' ? caregiverNav :
+    patientNav;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -45,11 +63,12 @@ export default function Layout() {
                 <Activity className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-lg sm:text-2xl font-bold text-gray-900">PulseLoop</h1>
-                <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">Personalized Diabetes Care</p>
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900">PulseSathi</h1>
+                <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">Medication Adherence</p>
               </div>
             </div>
             <div className="flex items-center space-x-2 sm:space-x-4">
+              <NotificationBell />
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-gray-900">
                   {user?.firstName} {user?.lastName}

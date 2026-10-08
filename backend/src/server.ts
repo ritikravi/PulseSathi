@@ -20,6 +20,12 @@ import patternRoutes from './routes/pattern';
 import experimentRoutes from './routes/experiment';
 import clinicianRoutes from './routes/clinician';
 import caregiverRoutes from './routes/caregiver';
+import medicineRoutes from './routes/medicine';
+import adherenceRoutes from './routes/adherence';
+import notificationRoutes from './routes/notification';
+import whatsappWebhookRoutes from './routes/whatsappWebhook';
+import whatsappConsentRoutes from './routes/whatsappConsent';
+import whatsappSimulateRoutes from './routes/whatsappSimulate';
 
 const app = express();
 
@@ -81,6 +87,12 @@ app.use('/api/patterns', patternRoutes);
 app.use('/api/experiments', experimentRoutes);
 app.use('/api/clinician', clinicianRoutes);
 app.use('/api/caregiver', caregiverRoutes);
+app.use('/api/medicines', medicineRoutes);
+app.use('/api/adherence', adherenceRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/whatsapp/webhook', whatsappWebhookRoutes);
+app.use('/api/whatsapp/consent', whatsappConsentRoutes);
+app.use('/api/whatsapp', whatsappSimulateRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -113,7 +125,38 @@ const PORT = process.env.PORT || 5000;
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+    
+    // Start reminder scheduler
+    startReminderScheduler();
   });
 });
+
+// Reminder scheduler
+function startReminderScheduler() {
+  const reminderScheduler = require('./services/reminderScheduler').default;
+  const intervalMs = parseInt(process.env.REMINDER_CHECK_INTERVAL_MS || '60000');
+  
+  console.log(`📅 Starting reminder scheduler (interval: ${intervalMs}ms)`);
+  console.log(`📱 WhatsApp mode: ${process.env.WHATSAPP_MODE || 'mock'}`);
+  
+  // Run immediately on startup
+  reminderScheduler.sendDueReminders().catch((err: any) => {
+    console.error('Scheduler startup error:', err);
+  });
+  
+  // Then run on interval
+  setInterval(() => {
+    reminderScheduler.sendDueReminders().catch((err: any) => {
+      console.error('Scheduler error:', err);
+    });
+  }, intervalMs);
+  
+  // Followup reminders check (less frequent)
+  setInterval(() => {
+    reminderScheduler.sendFollowupReminders().catch((err: any) => {
+      console.error('Followup scheduler error:', err);
+    });
+  }, intervalMs * 5); // Check every 5 minutes
+}
 
 export default app;

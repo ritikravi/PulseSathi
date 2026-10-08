@@ -68,3 +68,41 @@ export const experiments = {
   checkIn: (id: string, data: any) => api.post(`/experiments/${id}/checkin`, data),
   complete: (id: string) => api.post(`/experiments/${id}/complete`),
 };
+
+export const medicines = {
+  getMedicines: () => api.get('/medicines'),
+  addMedicine: (data: any) => api.post('/medicines', data),
+  updateMedicine: (id: string, data: any) => api.put(`/medicines/${id}`, data),
+  deleteMedicine: (id: string) => api.delete(`/medicines/${id}`),
+  getAdherence: (id: string) => api.get(`/medicines/${id}/adherence`),
+  getTodaySchedule: () => api.get('/medicines/today'),
+  markTaken: (scheduleId: string) => api.post(`/medicines/${scheduleId}/dose/taken`),
+  snoozeDose: (scheduleId: string, snoozeMinutes: number) =>
+    api.post(`/medicines/${scheduleId}/dose/snooze`, { snoozeMinutes }),
+};
+
+export const adherence = {
+  getOverview: () => api.get('/adherence/overview'),
+  getMedicineDetail: (medicineId: string) => api.get(`/adherence/medicine/${medicineId}`),
+  calculateRisk: () => api.post('/adherence/calculate-risk'),
+  getRisks: () => api.get('/adherence/risks'),
+};
+
+export const notifications = {
+  getNotifications: (params?: any) => api.get('/notifications', { params }),
+  markAsRead: (id: string) => api.put(`/notifications/${id}/read`),
+  markAllAsRead: () => api.put('/notifications/read-all'),
+  deleteNotification: (id: string) => api.delete(`/notifications/${id}`),
+};
+
+export const whatsapp = {
+  getConsent: () => api.get('/whatsapp/consent'),
+  saveConsent: (data: any) => api.post('/whatsapp/consent', data),
+  updatePreferences: (data: any) => api.put('/whatsapp/consent/preferences', data),
+  revokeConsent: (reason?: string) => api.delete('/whatsapp/consent', { data: { reason } }),
+  getStatus: () => api.get('/whatsapp/consent/status'),
+  // Demo mode: simulate incoming WhatsApp response
+  simulateResponse: (scheduleId: string, response: 'TAKEN' | 'NOT_TAKEN_YET') =>
+    api.post('/whatsapp/simulate', { scheduleId, response }),
+  getMessages: (params?: any) => api.get('/whatsapp/messages', { params }),
+};

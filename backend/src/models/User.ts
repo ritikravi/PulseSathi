@@ -8,6 +8,13 @@ export interface IUser extends Document {
   firstName: string;
   lastName: string;
   phone?: string;
+  
+  // WhatsApp integration
+  whatsappPhone?: string; // International format with country code
+  whatsappVerified: boolean;
+  preferredLanguage: 'en' | 'hi'; // English or Hindi
+  timezone: string; // e.g., 'Asia/Kolkata'
+  
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -46,6 +53,25 @@ const userSchema = new Schema<IUser>(
     phone: {
       type: String,
       trim: true,
+    },
+    whatsappPhone: {
+      type: String,
+      trim: true,
+      sparse: true, // Allow null but ensure uniqueness when present
+      index: true,
+    },
+    whatsappVerified: {
+      type: Boolean,
+      default: false,
+    },
+    preferredLanguage: {
+      type: String,
+      enum: ['en', 'hi'],
+      default: 'hi', // Default to Hindi for Indian users
+    },
+    timezone: {
+      type: String,
+      default: 'Asia/Kolkata',
     },
     isActive: {
       type: Boolean,
