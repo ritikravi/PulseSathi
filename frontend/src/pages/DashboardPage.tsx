@@ -45,9 +45,107 @@ export default function DashboardPage() {
   })) || [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Welcome Back!</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Welcome Back!</h1>
+        <p className="text-sm sm:text-base text-gray-600 mt-1">Here's your health summary</p>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+        <div className="card">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs sm:text-sm text-gray-500">Latest Glucose</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
+                {dashboardData?.latestGlucose?.[0]?.value || '--'} <span className="text-sm sm:text-base font-normal text-gray-500">mg/dL</span>
+              </p>
+            </div>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Activity className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs sm:text-sm text-gray-500">Patterns Found</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
+                {dashboardData?.patternCount || 0}
+              </p>
+            </div>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-success-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-success-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs sm:text-sm text-gray-500">Active Experiments</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
+                {dashboardData?.experimentCount || 0}
+              </p>
+            </div>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-warning-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-warning-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs sm:text-sm text-gray-500">Days Tracked</p>
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
+                {dashboardData?.daysTracked || 0}
+              </p>
+            </div>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-info-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-info-600" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Glucose Trend Chart */}
+      <div className="card">
+        <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Glucose Trend (Last 7 Days)</h2>
+        <div className="h-64 sm:h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={glucoseData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} />
+              <Tooltip />
+              <Line type="monotone" dataKey="value" stroke="#6366f1" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Pattern Detection CTA */}
+      <div className="card bg-gradient-to-r from-primary-50 to-primary-100 border-primary-200">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900">Discover Your Patterns</h3>
+            <p className="text-sm sm:text-base text-gray-600 mt-1">
+              Let AI analyze your data to find personalized behavior patterns
+            </p>
+          </div>
+          <button
+            onClick={handleDetectPatterns}
+            disabled={detecting}
+            className="btn btn-primary whitespace-nowrap w-full sm:w-auto"
+          >
+            {detecting ? 'Analyzing...' : 'Detect Patterns'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
         <p className="text-gray-600 mt-1">Here's your health summary</p>
       </div>
 
