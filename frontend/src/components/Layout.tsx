@@ -109,6 +109,15 @@ export default function Layout() {
         </div>
       </header>
 
+      {/* ── Hero image banner ────────────────────────────────────────── */}
+      <div className="w-full h-40 sm:h-56 overflow-hidden">
+        <img
+          src="/vercel.webp"
+          alt="PulseSathi - Medication Adherence"
+          className="w-full h-full object-cover object-top"
+        />
+      </div>
+
       {/* ── Green nav bar (full width, desktop) ──────────────────────── */}
       <nav className="bg-[#2e7d32] text-white text-xs hidden lg:flex sticky top-[65px] z-30">
         {navigation.map((item) => {

@@ -90,15 +90,6 @@ export default function LoginPage() {
         </div>
       </header>
 
-      {/* ── Hero image banner ────────────────────────────────────────── */}
-      <div className="w-full h-48 sm:h-64 overflow-hidden">
-        <img
-          src="/vercel.webp"
-          alt="PulseSathi - Medication Adherence"
-          className="w-full h-full object-cover object-top"
-        />
-      </div>
-
       {/* ── Green nav bar ────────────────────────────────────────────── */}
       <nav className="bg-[#2e7d32] text-white text-sm">
         <div className="px-0 flex gap-0 overflow-x-auto">
