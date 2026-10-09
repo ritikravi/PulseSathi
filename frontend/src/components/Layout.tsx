@@ -49,30 +49,54 @@ export default function Layout() {
         </span>
       </div>
 
-      {/* ── Header (full width, no max-w) ────────────────────────────── */}
+      {/* ── Header (full width, NIDM-style big header) ───────────────── */}
       <header className="bg-white border-b-4 border-[#2e7d32] shadow-sm sticky top-0 z-40">
-        <div className="flex items-center gap-3 px-4 py-3">
+        {/* Big header row */}
+        <div className="flex items-stretch w-full">
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-[#2e7d32] hover:bg-green-50 rounded flex-shrink-0"
+            className="lg:hidden px-3 text-[#2e7d32] hover:bg-green-50 border-r border-gray-200 flex-shrink-0"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
-          {/* Logo */}
-          <div className="w-10 h-10 bg-[#2e7d32] rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="text-white text-xl">💊</span>
+          {/* Logo + Brand — left side */}
+          <div className="flex items-center gap-4 px-5 py-4 flex-1">
+            <div className="w-16 h-16 bg-[#2e7d32] rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
+              <span className="text-white text-3xl">💊</span>
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2e7d32] tracking-wide leading-tight">
+                PulseSathi
+              </h1>
+              <p className="text-sm text-gray-700 font-semibold leading-snug">
+                पल्ससाथी — दवाई अनुपालन प्रबंधन प्रणाली
+              </p>
+              <p className="text-xs text-gray-500 leading-snug hidden sm:block">
+                AI-Powered Medication Adherence &amp; WhatsApp Reminder Platform
+              </p>
+            </div>
           </div>
 
-          {/* Brand */}
-          <div className="flex-1 min-w-0">
-            <h1 className="text-lg sm:text-xl font-bold text-[#2e7d32] leading-tight">PulseSathi</h1>
-            <p className="text-xs text-gray-500 leading-tight hidden sm:block">दवाई अनुपालन प्रबंधन</p>
+          {/* Right side — stats pills */}
+          <div className="hidden lg:flex items-center gap-3 px-6 border-l border-gray-200">
+            {[
+              { icon: '📱', val: 'WhatsApp', sub: 'Reminders' },
+              { icon: '📊', val: 'Real-time', sub: 'Adherence' },
+              { icon: '🤖', val: 'AI Risk', sub: 'Prediction' },
+              { icon: '👨‍👩‍👦', val: 'Family', sub: 'Support' },
+            ].map((s) => (
+              <div key={s.val} className="flex flex-col items-center px-4 py-2 bg-green-50 rounded-lg border border-green-200 text-center min-w-[72px]">
+                <span className="text-xl">{s.icon}</span>
+                <span className="text-xs font-bold text-[#2e7d32] leading-tight">{s.val}</span>
+                <span className="text-[10px] text-gray-500 leading-tight">{s.sub}</span>
+              </div>
+            ))}
           </div>
 
-          {/* User info + actions */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          {/* User info + logout — far right */}
+          <div className="flex items-center gap-2 px-4 border-l border-gray-200 flex-shrink-0">
             <NotificationBell />
             <div className="text-right hidden sm:block">
               <p className="text-sm font-semibold text-gray-900 leading-tight">
@@ -82,7 +106,7 @@ export default function Layout() {
             </div>
             <button
               onClick={handleLogout}
-              className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors ml-1"
               title="Logout"
             >
               <LogOut className="w-5 h-5" />
