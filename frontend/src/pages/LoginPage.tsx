@@ -54,22 +54,35 @@ export default function LoginPage() {
       {/* ── Header ───────────────────────────────────────────────────── */}
       <header className="bg-white border-b-4 border-[#2e7d32] shadow-sm">
         <div className="px-6 py-4 flex items-center gap-6">
-          {/* Logo / Emblem */}
+          {/* Logo */}
           <div className="w-16 h-16 bg-[#2e7d32] rounded-full flex items-center justify-center flex-shrink-0">
             <span className="text-white text-3xl">💊</span>
           </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#2e7d32] tracking-wide">
+
+          {/* Left: PulseSathi name */}
+          <div className="flex-shrink-0">
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#2e7d32] tracking-wide leading-tight">
               PulseSathi
             </h1>
-            <p className="text-sm text-gray-600">
-              <span className="font-semibold">पल्ससाथी</span> — दवाई अनुपालन प्रबंधन प्रणाली
-            </p>
-            <p className="text-xs text-gray-500">
-              Medication Adherence Management System | Type 2 Diabetes Care
+            <p className="text-sm text-gray-600 font-semibold">
+              पल्ससाथी — दवाई अनुपालन प्रबंधन प्रणाली
             </p>
           </div>
-          <div className="ml-auto text-right hidden sm:block">
+
+          {/* Divider */}
+          <div className="hidden sm:block w-px h-14 bg-gray-300 flex-shrink-0" />
+
+          {/* Right: Big tagline fills remaining space */}
+          <div className="flex-1 hidden sm:block">
+            <p className="text-2xl sm:text-3xl font-bold text-gray-800 leading-tight">
+              Medication Adherence Management System
+            </p>
+            <p className="text-sm text-gray-500 mt-0.5">
+              AI-Powered · WhatsApp Reminders · Type 2 Diabetes Care
+            </p>
+          </div>
+
+          <div className="ml-auto text-right hidden sm:block flex-shrink-0">
             <div className="text-xs text-gray-500">Powered by</div>
             <div className="font-bold text-[#2e7d32] text-sm">CaseBlitz 2026</div>
           </div>
