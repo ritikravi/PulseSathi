@@ -131,15 +131,6 @@ export default function Layout() {
         })}
       </nav>
 
-      {/* ── Hero image banner (below nav) ────────────────────────────── */}
-      <div className="w-full h-40 sm:h-56 overflow-hidden">
-        <img
-          src="/vercel.webp"
-          alt="PulseSathi - Medication Adherence"
-          className="w-full h-full object-cover object-top"
-        />
-      </div>
-
       {/* ── Mobile nav overlay ───────────────────────────────────────── */}
       {mobileMenuOpen && (
         <div
