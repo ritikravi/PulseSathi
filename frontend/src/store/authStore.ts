@@ -27,7 +27,7 @@ export const useAuthStore = create<AuthStore>()(
       logout: () => set({ user: null, token: null, isAuthenticated: false }),
     }),
     {
-      name: 'pulseloop-auth',
+      name: 'pulsesathi-auth-v2',
     }
   )
 );
