@@ -59,27 +59,28 @@ export default function LoginPage() {
             <span className="text-white text-3xl">💊</span>
           </div>
 
-          {/* Left: PulseSathi name */}
-          <div className="flex-shrink-0">
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#2e7d32] tracking-wide leading-tight">
-              PulseSathi
-            </h1>
-            <p className="text-sm text-gray-600 font-semibold">
-              पल्ससाथी — दवाई अनुपालन प्रबंधन प्रणाली
+          {/* Unified brand block */}
+          <div className="flex-1 hidden sm:flex flex-col justify-center">
+            {/* Top row: PulseSathi — Medication Adherence Management System */}
+            <div className="flex items-baseline gap-3">
+              <h1 className="text-3xl font-extrabold text-[#2e7d32] tracking-wide whitespace-nowrap">
+                PulseSathi
+              </h1>
+              <span className="text-2xl font-bold text-gray-400">—</span>
+              <p className="text-3xl font-extrabold text-[#2e7d32] leading-tight">
+                Medication Adherence Management System
+              </p>
+            </div>
+            {/* Bottom row: Hindi + tagline */}
+            <p className="text-sm text-gray-600 mt-1">
+              <span className="font-semibold">पल्ससाथी</span> — दवाई अनुपालन प्रबंधन प्रणाली &nbsp;·&nbsp; AI-Powered WhatsApp Reminders for Type 2 Diabetes
             </p>
           </div>
 
-          {/* Divider */}
-          <div className="hidden sm:block w-px h-14 bg-gray-300 flex-shrink-0" />
-
-          {/* Right: Big tagline fills remaining space */}
-          <div className="flex-1 hidden sm:block">
-            <p className="text-3xl sm:text-4xl font-extrabold text-[#2e7d32] leading-tight">
-              Medication Adherence Management System
-            </p>
-            <p className="text-sm text-gray-500 mt-0.5">
-              AI-Powered · WhatsApp Reminders · Type 2 Diabetes Care
-            </p>
+          {/* Mobile: stacked */}
+          <div className="flex-1 sm:hidden">
+            <h1 className="text-2xl font-extrabold text-[#2e7d32]">PulseSathi</h1>
+            <p className="text-xs text-gray-600">पल्ससाथी — दवाई अनुपालन प्रबंधन प्रणाली</p>
           </div>
 
           <div className="ml-auto text-right hidden sm:block flex-shrink-0">
