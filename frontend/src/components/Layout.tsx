@@ -51,64 +51,54 @@ export default function Layout() {
 
       {/* ── Header (full width, NIDM-style big header) ───────────────── */}
       <header className="bg-white border-b-4 border-[#2e7d32] shadow-sm sticky top-0 z-40">
-        {/* Big header row */}
-        <div className="flex items-stretch w-full">
+        <div className="flex items-stretch w-full min-h-[80px]">
+
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden px-3 text-[#2e7d32] hover:bg-green-50 border-r border-gray-200 flex-shrink-0"
+            className="lg:hidden px-3 text-[#2e7d32] hover:bg-green-50 border-r border-gray-200 flex-shrink-0 flex items-center"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
 
-          {/* Logo + Brand — left side */}
-          <div className="flex items-center gap-4 px-5 py-4 flex-1">
+          {/* Logo + Brand — left */}
+          <div className="flex items-center gap-4 px-5 py-3">
             <div className="w-16 h-16 bg-[#2e7d32] rounded-full flex items-center justify-center flex-shrink-0 shadow-md">
               <span className="text-white text-3xl">💊</span>
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2e7d32] tracking-wide leading-tight">
-                PulseSathi
-              </h1>
-              <p className="text-sm text-gray-700 font-semibold leading-snug">
-                पल्ससाथी — दवाई अनुपालन प्रबंधन प्रणाली
-              </p>
-              <p className="text-xs text-gray-500 leading-snug hidden sm:block">
-                AI-Powered Medication Adherence &amp; WhatsApp Reminder Platform
-              </p>
+              <h1 className="text-3xl font-extrabold text-[#2e7d32] tracking-wide leading-tight">PulseSathi</h1>
+              <p className="text-sm text-gray-700 font-semibold">पल्ससाथी — दवाई अनुपालन प्रबंधन प्रणाली</p>
+              <p className="text-xs text-gray-500 hidden sm:block">AI-Powered Medication Adherence &amp; WhatsApp Reminder Platform</p>
             </div>
           </div>
 
-          {/* Right side — stats pills */}
-          <div className="hidden lg:flex items-center gap-3 px-6 border-l border-gray-200">
+          {/* Center — feature pills, grows to fill space */}
+          <div className="hidden lg:flex items-center justify-center gap-4 flex-1 px-6 border-l border-gray-100">
             {[
               { icon: '📱', val: 'WhatsApp', sub: 'Reminders' },
-              { icon: '📊', val: 'Real-time', sub: 'Adherence' },
+              { icon: '📊', val: 'Real-time', sub: 'Adherence PDC' },
               { icon: '🤖', val: 'AI Risk', sub: 'Prediction' },
-              { icon: '👨‍👩‍👦', val: 'Family', sub: 'Support' },
+              { icon: '👨‍👩‍👦', val: 'Family', sub: 'Caregiver Support' },
+              { icon: '🩺', val: 'Clinician', sub: 'Dashboard' },
+              { icon: '🏥', val: 'T2 Diabetes', sub: 'Management' },
             ].map((s) => (
-              <div key={s.val} className="flex flex-col items-center px-4 py-2 bg-green-50 rounded-lg border border-green-200 text-center min-w-[72px]">
-                <span className="text-xl">{s.icon}</span>
-                <span className="text-xs font-bold text-[#2e7d32] leading-tight">{s.val}</span>
+              <div key={s.val} className="flex flex-col items-center px-4 py-2 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 text-center transition-colors cursor-default">
+                <span className="text-2xl">{s.icon}</span>
+                <span className="text-xs font-bold text-[#2e7d32] leading-tight mt-0.5">{s.val}</span>
                 <span className="text-[10px] text-gray-500 leading-tight">{s.sub}</span>
               </div>
             ))}
           </div>
 
           {/* User info + logout — far right */}
-          <div className="flex items-center gap-2 px-4 border-l border-gray-200 flex-shrink-0">
+          <div className="flex items-center gap-3 px-5 border-l border-gray-200 flex-shrink-0">
             <NotificationBell />
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-semibold text-gray-900 leading-tight">
-                {user?.firstName} {user?.lastName}
-              </p>
+              <p className="text-sm font-bold text-gray-900 leading-tight">{user?.firstName} {user?.lastName}</p>
               <p className="text-xs text-gray-500 capitalize leading-tight">{user?.role}</p>
             </div>
-            <button
-              onClick={handleLogout}
-              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors ml-1"
-              title="Logout"
-            >
+            <button onClick={handleLogout} className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors" title="Logout">
               <LogOut className="w-5 h-5" />
             </button>
           </div>
