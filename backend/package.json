@@ -13,10 +13,14 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "testMatch": ["**/tests/**/*.test.ts"],
+    "testMatch": [
+      "**/tests/**/*.test.ts"
+    ],
     "globals": {
       "ts-jest": {
-        "tsconfig": { "strict": false }
+        "tsconfig": {
+          "strict": false
+        }
       }
     }
   },
@@ -38,6 +42,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.0",
     "morgan": "^1.10.0",
+    "twilio": "^6.1.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {

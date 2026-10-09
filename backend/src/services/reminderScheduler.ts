@@ -3,7 +3,7 @@ import Medicine from '../models/Medicine';
 import User from '../models/User';
 import WhatsAppConsent from '../models/WhatsAppConsent';
 import WhatsAppMessage from '../models/WhatsAppMessage';
-import whatsappService from './whatsappService';
+import { sendWhatsAppReminder } from './twilioService';
 
 class ReminderScheduler {
   private isRunning = false;
@@ -126,8 +126,8 @@ class ReminderScheduler {
     // Format scheduled time
     const scheduledTime = schedule.scheduledTime;
 
-    // Send WhatsApp message
-    const result = await whatsappService.sendInteractiveReminder(
+    // Send WhatsApp message via Twilio
+    const result = await sendWhatsAppReminder(
       consent.whatsappPhone,
       {
         patientName: patient.firstName,
