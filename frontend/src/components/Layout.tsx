@@ -19,6 +19,7 @@ export default function Layout() {
     { name: 'Today / आज', href: '/today', icon: Pill },
     { name: 'WhatsApp', href: '/whatsapp', icon: MessageCircle },
     { name: 'Dashboard', href: '/dashboard', icon: Activity },
+    { name: 'Patterns', href: '/patterns', icon: BarChart3 },
     { name: 'History', href: '/history', icon: History },
     { name: 'Profile', href: '/profile', icon: User },
   ];
