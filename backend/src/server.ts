@@ -27,6 +27,7 @@ import whatsappWebhookRoutes from './routes/whatsappWebhook';
 import whatsappConsentRoutes from './routes/whatsappConsent';
 import whatsappSimulateRoutes from './routes/whatsappSimulate';
 import twilioWebhookRoutes from './routes/twilioWebhook';
+import smsWebhookRoutes from './routes/smsWebhook';
 
 const app = express();
 
@@ -97,6 +98,7 @@ app.use('/api/whatsapp/webhook', whatsappWebhookRoutes);
 app.use('/api/whatsapp/consent', whatsappConsentRoutes);
 app.use('/api/whatsapp', whatsappSimulateRoutes);
 app.use('/api/twilio', twilioWebhookRoutes);
+app.use('/api/sms', smsWebhookRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
