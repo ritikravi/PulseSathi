@@ -74,7 +74,7 @@ export default function Layout() {
           </div>
 
           {/* Center — feature pills, grows to fill space */}
-          <div className="hidden lg:flex items-center justify-center gap-4 flex-1 px-6 border-l border-gray-100">
+          <div className="hidden lg:flex items-center justify-center gap-3 flex-1 px-6 border-l border-gray-100">
             {[
               { icon: '📱', val: 'WhatsApp', sub: 'Reminders' },
               { icon: '📊', val: 'Real-time', sub: 'Adherence PDC' },
@@ -82,11 +82,15 @@ export default function Layout() {
               { icon: '👨‍👩‍👦', val: 'Family', sub: 'Caregiver Support' },
               { icon: '🩺', val: 'Clinician', sub: 'Dashboard' },
               { icon: '🏥', val: 'T2 Diabetes', sub: 'Management' },
+              { icon: '🔔', val: 'Smart', sub: 'Dose Alerts' },
+              { icon: '📈', val: 'Pattern', sub: 'Detection' },
+              { icon: '🌐', val: 'Hindi', sub: 'हिंदी Support' },
+              { icon: '🔒', val: 'Consent', sub: 'Privacy First' },
             ].map((s) => (
-              <div key={s.val} className="flex flex-col items-center px-4 py-2 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 text-center transition-colors cursor-default">
-                <span className="text-2xl">{s.icon}</span>
-                <span className="text-xs font-bold text-[#2e7d32] leading-tight mt-0.5">{s.val}</span>
-                <span className="text-[10px] text-gray-500 leading-tight">{s.sub}</span>
+              <div key={s.val} className="flex flex-col items-center px-3 py-2 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 text-center transition-colors cursor-default flex-shrink-0">
+                <span className="text-xl">{s.icon}</span>
+                <span className="text-[11px] font-bold text-[#2e7d32] leading-tight mt-0.5">{s.val}</span>
+                <span className="text-[9px] text-gray-500 leading-tight">{s.sub}</span>
               </div>
             ))}
           </div>
