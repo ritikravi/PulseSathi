@@ -73,24 +73,36 @@ export default function Layout() {
             </div>
           </div>
 
-          {/* Center — feature pills, grows to fill space */}
-          <div className="hidden lg:flex items-center justify-center gap-3 flex-1 px-4 border-l border-gray-100">
+          {/* Center — 4 Hindi feature cards like the design */}
+          <div className="hidden lg:flex items-center justify-center gap-4 flex-1 px-6 border-l border-gray-100">
             {[
-              { icon: '📱', val: 'WhatsApp', sub: 'Reminders' },
-              { icon: '📊', val: 'Real-time', sub: 'Adherence PDC' },
-              { icon: '🤖', val: 'AI Risk', sub: 'Prediction' },
-              { icon: '👨‍👩‍👦', val: 'Family', sub: 'Caregiver Support' },
-              { icon: '🩺', val: 'Clinician', sub: 'Dashboard' },
-              { icon: '🏥', val: 'T2 Diabetes', sub: 'Management' },
-              { icon: '🔔', val: 'Smart', sub: 'Dose Alerts' },
-              { icon: '📈', val: 'Pattern', sub: 'Detection' },
-              { icon: '🌐', val: 'Multi Language', sub: 'हिंदी Support' },
-              { icon: '🔒', val: 'Consent', sub: 'Privacy First' },
+              {
+                icon: '💊',
+                hindi: 'दवाई की समय पर याद दिलाना',
+                eng: 'Right medicine, at the right time',
+              },
+              {
+                icon: '👨‍👩‍👦',
+                hindi: 'परिवार की सहभागिता',
+                eng: 'Family support across cities',
+              },
+              {
+                icon: '🧠',
+                hindi: 'AI से जोखिम की पहचान',
+                eng: 'Predicts likelihood of missed dose',
+              },
+              {
+                icon: '📋',
+                hindi: 'डॉक्टर के लिए बेहतर जानकारी',
+                eng: 'Actionable insights for better care',
+              },
             ].map((s) => (
-              <div key={s.val} className="flex flex-col items-center px-3 py-2.5 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 text-center transition-colors cursor-default flex-shrink-0 min-w-[80px]">
-                <span className="text-2xl">{s.icon}</span>
-                <span className="text-xs font-bold text-[#2e7d32] leading-tight mt-1">{s.val}</span>
-                <span className="text-[10px] text-gray-500 leading-tight">{s.sub}</span>
+              <div key={s.hindi} className="flex items-start gap-3 px-4 py-3 bg-white hover:bg-green-50 rounded-xl border border-gray-200 hover:border-green-300 transition-colors cursor-default flex-1 min-w-0">
+                <span className="text-3xl flex-shrink-0 mt-0.5">{s.icon}</span>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-gray-900 leading-tight">{s.hindi}</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-snug">{s.eng}</p>
+                </div>
               </div>
             ))}
           </div>
