@@ -59,19 +59,19 @@ export default function LoginPage() {
             <span className="text-white text-3xl">💊</span>
           </div>
 
-          {/* Unified brand block */}
-          <div className="flex-1 hidden sm:flex flex-col justify-center">
-            {/* Top row: PulseSathi — Medication Adherence Management System */}
-            <div className="flex items-baseline gap-3">
-              <h1 className="text-3xl font-extrabold text-[#2e7d32] tracking-wide whitespace-nowrap">
+          {/* Unified brand block - fills all remaining space */}
+          <div className="flex-1 hidden sm:flex flex-col justify-center min-w-0">
+            {/* Top row: stretches full width */}
+            <div className="flex items-baseline gap-2 w-full">
+              <h1 className="text-4xl xl:text-5xl font-extrabold text-[#2e7d32] tracking-wide whitespace-nowrap flex-shrink-0">
                 PulseSathi
               </h1>
-              <span className="text-2xl font-bold text-gray-400">—</span>
-              <p className="text-3xl font-extrabold text-[#2e7d32] leading-tight">
+              <span className="text-4xl xl:text-5xl font-bold text-gray-400 flex-shrink-0">—</span>
+              <p className="text-4xl xl:text-5xl font-extrabold text-[#2e7d32] leading-tight flex-1 min-w-0">
                 Medication Adherence Management System
               </p>
             </div>
-            {/* Bottom row: Hindi + tagline */}
+            {/* Bottom row */}
             <p className="text-sm text-gray-600 mt-1">
               <span className="font-semibold">पल्ससाथी</span> — दवाई अनुपालन प्रबंधन प्रणाली &nbsp;·&nbsp; AI-Powered WhatsApp Reminders for Type 2 Diabetes
             </p>
