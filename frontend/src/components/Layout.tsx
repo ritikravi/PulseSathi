@@ -84,7 +84,7 @@ export default function Layout() {
               { icon: '🏥', val: 'T2 Diabetes', sub: 'Management' },
               { icon: '🔔', val: 'Smart', sub: 'Dose Alerts' },
               { icon: '📈', val: 'Pattern', sub: 'Detection' },
-              { icon: '🌐', val: 'Hindi', sub: 'हिंदी Support' },
+              { icon: '🌐', val: 'Multi Language', sub: 'हिंदी Support' },
               { icon: '🔒', val: 'Consent', sub: 'Privacy First' },
             ].map((s) => (
               <div key={s.val} className="flex flex-col items-center px-3 py-2 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 text-center transition-colors cursor-default flex-shrink-0">
