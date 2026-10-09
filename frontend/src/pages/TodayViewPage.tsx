@@ -13,7 +13,7 @@ export default function TodayViewPage() {
       const response = await medicines.getTodaySchedule();
       return response.data.data;
     },
-    refetchInterval: 30000, // Poll every 30s to catch WhatsApp responses
+    refetchInterval: 30000,
   });
 
   const { data: whatsappStatus } = useQuery({
@@ -25,171 +25,136 @@ export default function TodayViewPage() {
   });
 
   const takeDoseMutation = useMutation({
-    mutationFn: async (scheduleId: string) => {
-      return medicines.markTaken(scheduleId);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['medicines-today'] });
-    },
+    mutationFn: (scheduleId: string) => medicines.markTaken(scheduleId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['medicines-today'] }),
   });
 
   const snoozeDoseMutation = useMutation({
-    mutationFn: async ({ scheduleId, snoozeMinutes }: { scheduleId: string; snoozeMinutes: number }) => {
-      return medicines.snoozeDose(scheduleId, snoozeMinutes);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['medicines-today'] });
-    },
+    mutationFn: ({ scheduleId, snoozeMinutes }: { scheduleId: string; snoozeMinutes: number }) =>
+      medicines.snoozeDose(scheduleId, snoozeMinutes),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['medicines-today'] }),
   });
-
-  const handleTakeDose = (scheduleId: string) => {
-    takeDoseMutation.mutate(scheduleId);
-  };
-
-  const handleSnooze = (scheduleId: string, minutes: number = 30) => {
-    snoozeDoseMutation.mutate({ scheduleId, snoozeMinutes: minutes });
-  };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">Loading today's medicines...</div>
+        <div className="text-[#2e7d32] font-medium">Loading today's medicines...</div>
       </div>
     );
   }
 
   const { overdue = [], dueNow = [], upcoming = [], completed = [] } = todayData || {};
   const totalPending = overdue.length + dueNow.length;
+  const isPending = takeDoseMutation.isPending || snoozeDoseMutation.isPending;
 
   return (
-    <div className="space-y-4 pb-20">
-      {/* Header - Simple greeting */}
-      <div className="bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl p-6 text-white">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-1">
-          🌅 {format(new Date(), 'EEEE')}
-        </h1>
-        <p className="text-primary-100 text-sm sm:text-base">
-          {format(new Date(), 'MMMM d, yyyy')}
-        </p>
+    <div className="space-y-4 pb-10">
+
+      {/* ── Date header ──────────────────────────────────────────────── */}
+      <div className="bg-[#2e7d32] text-white px-5 py-4 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">🌅 {format(new Date(), 'EEEE')}</h1>
+          <p className="text-green-200 text-sm">{format(new Date(), 'MMMM d, yyyy')}</p>
+        </div>
+        {totalPending > 0 && (
+          <div className="flex items-center gap-2 bg-white bg-opacity-20 rounded-lg px-4 py-2">
+            <Bell className="w-5 h-5" />
+            <span className="font-bold text-sm">{totalPending} Pending</span>
+          </div>
+        )}
       </div>
 
-      {/* Pending count */}
-      {totalPending > 0 && (
-        <div className="bg-warning-50 border-l-4 border-warning-500 p-4 rounded-lg">
-          <div className="flex items-center">
-            <Bell className="w-5 h-5 text-warning-600 mr-3 flex-shrink-0" />
-            <div>
-              <p className="font-semibold text-warning-900">
-                {totalPending} {totalPending === 1 ? 'Medicine' : 'Medicines'} Pending
-              </p>
-              <p className="text-sm text-warning-700">Please take your medicines on time</p>
-            </div>
+      {/* ── Overdue ──────────────────────────────────────────────────── */}
+      {overdue.length > 0 && (
+        <Section
+          title="⚠️ Overdue Medicines"
+          titleClass="text-white"
+          headerClass="bg-red-600"
+          borderClass="border-red-600"
+        >
+          {overdue.map((schedule: any) => (
+            <DoseCard key={schedule._id} schedule={schedule} variant="overdue"
+              onTake={() => takeDoseMutation.mutate(schedule._id)}
+              onSnooze={() => snoozeDoseMutation.mutate({ scheduleId: schedule._id, snoozeMinutes: 30 })}
+              isPending={isPending} />
+          ))}
+        </Section>
+      )}
+
+      {/* ── Due Now ──────────────────────────────────────────────────── */}
+      {dueNow.length > 0 && (
+        <Section
+          title="🕐 Due Now"
+          titleClass="text-white"
+          headerClass="bg-[#2e7d32]"
+          borderClass="border-[#2e7d32]"
+        >
+          {dueNow.map((schedule: any) => (
+            <DoseCard key={schedule._id} schedule={schedule} variant="due"
+              onTake={() => takeDoseMutation.mutate(schedule._id)}
+              onSnooze={() => snoozeDoseMutation.mutate({ scheduleId: schedule._id, snoozeMinutes: 30 })}
+              isPending={isPending} />
+          ))}
+        </Section>
+      )}
+
+      {/* ── Upcoming ─────────────────────────────────────────────────── */}
+      {upcoming.length > 0 && (
+        <Section
+          title="⏰ Upcoming Medicines"
+          titleClass="text-white"
+          headerClass="bg-[#388e3c]"
+          borderClass="border-[#388e3c]"
+        >
+          {upcoming.map((schedule: any) => (
+            <DoseCard key={schedule._id} schedule={schedule} variant="upcoming" isPending={false} />
+          ))}
+        </Section>
+      )}
+
+      {/* ── Completed ────────────────────────────────────────────────── */}
+      {completed.length > 0 && (
+        <Section
+          title="✅ Completed Today"
+          titleClass="text-white"
+          headerClass="bg-gray-600"
+          borderClass="border-gray-400"
+        >
+          {completed.map((schedule: any) => (
+            <DoseCard key={schedule._id} schedule={schedule} variant="completed" isPending={false} />
+          ))}
+        </Section>
+      )}
+
+      {/* ── Empty ────────────────────────────────────────────────────── */}
+      {totalPending === 0 && completed.length === 0 && (
+        <div className="border-2 border-[#2e7d32] rounded-lg overflow-hidden">
+          <div className="bg-[#2e7d32] px-5 py-3">
+            <h2 className="text-white font-bold">Today's Medicines</h2>
+          </div>
+          <div className="p-10 text-center bg-green-50">
+            <CheckCircle className="w-14 h-14 text-[#2e7d32] mx-auto mb-3" />
+            <p className="text-lg font-bold text-[#2e7d32]">All Done!</p>
+            <p className="text-sm text-gray-600 mt-1">No medicines scheduled for today</p>
           </div>
         </div>
       )}
 
-      {/* Overdue Medicines - RED */}
-      {overdue.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="text-lg font-bold text-danger-700 flex items-center">
-            <AlertCircle className="w-5 h-5 mr-2" />
-            OVERDUE
-          </h2>
-          {overdue.map((schedule: any) => (
-            <DoseCard
-              key={schedule._id}
-              schedule={schedule}
-              variant="overdue"
-              onTake={() => handleTakeDose(schedule._id)}
-              onSnooze={() => handleSnooze(schedule._id)}
-              isPending={takeDoseMutation.isPending || snoozeDoseMutation.isPending}
-            />
-          ))}
-        </div>
-      )}
+      {/* ── WhatsApp Simulator ───────────────────────────────────────── */}
+      {whatsappStatus?.isDemo && <WhatsAppDemoSimulator />}
 
-      {/* Due Now - GREEN */}
-      {dueNow.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="text-lg font-bold text-success-700 flex items-center">
-            <Clock className="w-5 h-5 mr-2" />
-            DUE NOW
-          </h2>
-          {dueNow.map((schedule: any) => (
-            <DoseCard
-              key={schedule._id}
-              schedule={schedule}
-              variant="due"
-              onTake={() => handleTakeDose(schedule._id)}
-              onSnooze={() => handleSnooze(schedule._id)}
-              isPending={takeDoseMutation.isPending || snoozeDoseMutation.isPending}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Upcoming */}
-      {upcoming.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="text-lg font-bold text-gray-700 flex items-center">
-            <Pill className="w-5 h-5 mr-2" />
-            UPCOMING
-          </h2>
-          {upcoming.map((schedule: any) => (
-            <DoseCard
-              key={schedule._id}
-              schedule={schedule}
-              variant="upcoming"
-              isPending={false}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Completed */}
-      {completed.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="text-lg font-bold text-gray-500 flex items-center">
-            <CheckCircle className="w-5 h-5 mr-2" />
-            COMPLETED
-          </h2>
-          {completed.map((schedule: any) => (
-            <DoseCard
-              key={schedule._id}
-              schedule={schedule}
-              variant="completed"
-              isPending={false}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Empty state */}
-      {totalPending === 0 && completed.length === 0 && (
-        <div className="text-center py-12 bg-success-50 rounded-lg">
-          <CheckCircle className="w-16 h-16 text-success-600 mx-auto mb-4" />
-          <p className="text-lg font-semibold text-success-900">All caught up!</p>
-          <p className="text-success-700 mt-1">No medicines scheduled for today</p>
-        </div>
-      )}
-
-      {/* WhatsApp demo simulator - show in demo mode */}
-      {whatsappStatus?.isDemo && (
-        <WhatsAppDemoSimulator />
-      )}
-
-      {/* WhatsApp setup prompt if not connected */}
+      {/* ── WhatsApp Setup Prompt ────────────────────────────────────── */}
       {!whatsappStatus?.hasConsent && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
-          <MessageCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="font-semibold text-green-900 text-sm">Enable WhatsApp Reminders</p>
-            <p className="text-xs text-green-700 mt-0.5">
-              Get medicine reminders on WhatsApp. Reply with one tap to confirm.
-            </p>
-            <a href="/profile" className="text-xs text-green-700 font-semibold underline mt-1 inline-block">
-              Set up now →
-            </a>
+        <div className="border-2 border-[#2e7d32] rounded-lg overflow-hidden">
+          <div className="bg-[#2e7d32] px-5 py-3 flex items-center gap-2">
+            <MessageCircle className="w-5 h-5 text-white" />
+            <h2 className="text-white font-bold">Enable WhatsApp Reminders</h2>
+          </div>
+          <div className="p-4 bg-green-50 flex items-start gap-3">
+            <div>
+              <p className="text-sm text-gray-700 mt-0.5">Get medicine reminders on WhatsApp. Reply with one tap to confirm.</p>
+              <a href="/profile" className="text-sm text-[#2e7d32] font-bold underline mt-2 inline-block">Set up now →</a>
+            </div>
           </div>
         </div>
       )}
@@ -197,6 +162,23 @@ export default function TodayViewPage() {
   );
 }
 
+// ── Section wrapper ────────────────────────────────────────────────────────
+function Section({ title, titleClass, headerClass, borderClass, children }: {
+  title: string; titleClass: string; headerClass: string; borderClass: string; children: React.ReactNode;
+}) {
+  return (
+    <div className={`border-2 ${borderClass} rounded-lg overflow-hidden shadow-sm`}>
+      <div className={`${headerClass} px-5 py-3`}>
+        <h2 className={`font-bold text-base ${titleClass}`}>{title}</h2>
+      </div>
+      <div className="divide-y divide-gray-100 bg-white">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ── DoseCard ───────────────────────────────────────────────────────────────
 interface DoseCardProps {
   schedule: any;
   variant: 'overdue' | 'due' | 'upcoming' | 'completed';
@@ -209,92 +191,68 @@ function DoseCard({ schedule, variant, onTake, onSnooze, isPending }: DoseCardPr
   const medicine = schedule.medicineId;
   const timeStr = format(new Date(schedule.scheduledFor), 'h:mm a');
 
-  const variantStyles = {
-    overdue: 'bg-danger-50 border-danger-200 border-2',
-    due: 'bg-success-50 border-success-200 border-2',
-    upcoming: 'bg-white border-gray-200 border',
-    completed: 'bg-gray-50 border-gray-200 border opacity-60',
+  const iconBg = {
+    overdue: 'bg-red-100 text-red-600',
+    due: 'bg-green-100 text-[#2e7d32]',
+    upcoming: 'bg-green-50 text-[#388e3c]',
+    completed: 'bg-gray-100 text-gray-500',
   };
-
-  const iconColors = {
-    overdue: 'text-danger-600 bg-danger-100',
-    due: 'text-success-600 bg-success-100',
-    upcoming: 'text-primary-600 bg-primary-100',
-    completed: 'text-gray-600 bg-gray-200',
-  };
-
-  const minutesOverdue = schedule.isOverdue ? schedule.getMinutesOverdue() : 0;
 
   return (
-    <div className={`rounded-xl p-4 sm:p-5 ${variantStyles[variant]} shadow-sm`}>
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-start flex-1">
-          <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${iconColors[variant]}`}>
-            <Pill className="w-6 h-6" />
-          </div>
-          <div className="ml-3 flex-1">
-            <h3 className="font-bold text-lg text-gray-900">{medicine?.name || 'Medicine'}</h3>
-            <p className="text-sm text-gray-600">{medicine?.dosage}</p>
-            <div className="flex items-center gap-2 mt-1 text-sm">
-              <span className="text-gray-700 font-medium">{timeStr}</span>
-              {minutesOverdue > 0 && (
-                <span className="text-danger-600 font-medium">({minutesOverdue} min late)</span>
-              )}
-            </div>
-          </div>
-        </div>
+    <div className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors">
+      {/* Icon */}
+      <div className={`w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0 ${iconBg[variant]}`}>
+        <Pill className="w-5 h-5" />
       </div>
 
-      {/* Food instruction */}
-      <div className="mb-3">
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white text-gray-700 border border-gray-300">
-          {schedule.beforeAfterFood === 'before' && '☕ Before food'}
-          {schedule.beforeAfterFood === 'after' && '🍽️ After food'}
-          {schedule.beforeAfterFood === 'anytime' && '⏰ Anytime'}
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <p className="font-bold text-gray-900 text-base">{medicine?.name || 'Medicine'}</p>
+        <p className="text-sm text-gray-500">{medicine?.dosage} &nbsp;·&nbsp; {timeStr}</p>
+        <span className="inline-block mt-1 text-xs bg-green-50 text-[#2e7d32] border border-green-200 px-2 py-0.5 rounded-full">
+          {schedule.beforeAfterFood === 'before' ? '☕ Before food' :
+           schedule.beforeAfterFood === 'after' ? '🍽️ After food' : '⏰ Anytime'}
         </span>
+        {schedule.responseSource === 'whatsapp' && schedule.takenAt && (
+          <span className="ml-2 inline-flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+            <MessageCircle className="w-3 h-3" /> via WhatsApp
+          </span>
+        )}
       </div>
 
-      {/* Action buttons */}
-      {(variant === 'overdue' || variant === 'due') && (
-        <div className="flex gap-2">
-          <button
-            onClick={onTake}
-            disabled={isPending}
-            className="flex-1 bg-success-600 hover:bg-success-700 text-white font-semibold py-3 px-4 rounded-lg text-base sm:text-lg disabled:opacity-50 transition-colors"
-          >
-            ✓ TAKEN
-          </button>
-          <button
-            onClick={onSnooze}
-            disabled={isPending}
-            className="flex-1 bg-white hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-lg border-2 border-gray-300 text-base sm:text-lg disabled:opacity-50 transition-colors"
-          >
-            ⏰ +30 min
-          </button>
-        </div>
-      )}
-
-      {variant === 'completed' && schedule.takenAt && (
-        <div className="text-sm text-gray-600 flex items-center gap-1.5">
-          <CheckCircle className="w-4 h-4 text-green-500" />
-          Taken at {format(new Date(schedule.takenAt), 'h:mm a')}
-          {schedule.delayMinutes > 0 && ` (${schedule.delayMinutes} min late)`}
-          {schedule.responseSource === 'whatsapp' && (
-            <span className="inline-flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-1">
-              <MessageCircle className="w-3 h-3" />
-              via WhatsApp
-            </span>
-          )}
-        </div>
-      )}
-
-      {/* WhatsApp reminder sent indicator */}
-      {(variant === 'overdue' || variant === 'due') && schedule.whatsappReminderSent && (
-        <div className="mt-2 flex items-center gap-1.5 text-xs text-gray-500">
-          <MessageCircle className="w-3.5 h-3.5 text-green-500" />
-          WhatsApp reminder sent
-        </div>
-      )}
+      {/* Status / Actions */}
+      <div className="flex-shrink-0 flex flex-col items-end gap-2">
+        {(variant === 'overdue' || variant === 'due') && (
+          <div className="flex gap-2">
+            <button
+              onClick={onTake} disabled={isPending}
+              className="bg-[#2e7d32] hover:bg-[#1b5e20] text-white font-bold px-5 py-2.5 rounded-lg text-sm disabled:opacity-50 transition-colors"
+            >
+              ✓ TAKEN
+            </button>
+            <button
+              onClick={onSnooze} disabled={isPending}
+              className="bg-white hover:bg-gray-50 text-gray-700 font-medium px-4 py-2.5 rounded-lg border-2 border-gray-300 text-sm disabled:opacity-50 transition-colors"
+            >
+              ⏰ +30 min
+            </button>
+          </div>
+        )}
+        {variant === 'completed' && (
+          <span className="text-sm text-[#2e7d32] font-semibold flex items-center gap-1">
+            <CheckCircle className="w-4 h-4" />
+            {schedule.takenAt ? `Taken ${format(new Date(schedule.takenAt), 'h:mm a')}` : 'Taken'}
+          </span>
+        )}
+        {variant === 'upcoming' && (
+          <span className="text-xs text-gray-400">Scheduled</span>
+        )}
+        {schedule.whatsappReminderSent && variant !== 'completed' && (
+          <span className="text-xs text-green-600 flex items-center gap-1">
+            <MessageCircle className="w-3 h-3" /> Reminder sent
+          </span>
+        )}
+      </div>
     </div>
   );
 }
