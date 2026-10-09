@@ -1,3 +1,4 @@
+// PulseSathi v2.0 - WhatsApp Medication Adherence Platform
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
