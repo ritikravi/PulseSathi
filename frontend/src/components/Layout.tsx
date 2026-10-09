@@ -41,21 +41,21 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
 
-      {/* ── Top utility bar ──────────────────────────────────────────── */}
-      <div className="bg-[#1a3a1a] text-white text-xs py-1 px-4 flex justify-between items-center">
+      {/* ── Top utility bar (full width) ─────────────────────────────── */}
+      <div className="bg-[#1a3a1a] text-white text-xs py-1 flex justify-between items-center px-4">
         <span>🇮🇳 PulseSathi — पल्ससाथी | Medication Adherence System</span>
-        <span className="hidden sm:block text-green-300">
-          {user?.firstName} {user?.lastName} · <span className="capitalize">{user?.role}</span>
+        <span className="hidden sm:block text-green-300 capitalize">
+          {user?.role}
         </span>
       </div>
 
-      {/* ── Header ───────────────────────────────────────────────────── */}
+      {/* ── Header (full width, no max-w) ────────────────────────────── */}
       <header className="bg-white border-b-4 border-[#2e7d32] shadow-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
+        <div className="flex items-center gap-3 px-4 py-3">
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-[#2e7d32] hover:bg-green-50 rounded"
+            className="lg:hidden p-2 text-[#2e7d32] hover:bg-green-50 rounded flex-shrink-0"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -64,22 +64,25 @@ export default function Layout() {
           <div className="w-10 h-10 bg-[#2e7d32] rounded-full flex items-center justify-center flex-shrink-0">
             <span className="text-white text-xl">💊</span>
           </div>
-          <div>
-            <h1 className="text-lg sm:text-xl font-bold text-[#2e7d32]">PulseSathi</h1>
-            <p className="text-xs text-gray-500 hidden sm:block">दवाई अनुपालन प्रबंधन</p>
+
+          {/* Brand */}
+          <div className="flex-1 min-w-0">
+            <h1 className="text-lg sm:text-xl font-bold text-[#2e7d32] leading-tight">PulseSathi</h1>
+            <p className="text-xs text-gray-500 leading-tight hidden sm:block">दवाई अनुपालन प्रबंधन</p>
           </div>
 
-          <div className="ml-auto flex items-center gap-2">
+          {/* User info + actions */}
+          <div className="flex items-center gap-2 flex-shrink-0">
             <NotificationBell />
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-sm font-semibold text-gray-900 leading-tight">
                 {user?.firstName} {user?.lastName}
               </p>
-              <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+              <p className="text-xs text-gray-500 capitalize leading-tight">{user?.role}</p>
             </div>
             <button
               onClick={handleLogout}
-              className="p-2 text-gray-500 hover:text-[#2e7d32] hover:bg-green-50 rounded transition-colors"
+              className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
               title="Logout"
             >
               <LogOut className="w-5 h-5" />
@@ -88,37 +91,38 @@ export default function Layout() {
         </div>
       </header>
 
-      {/* ── Green nav bar (desktop) ───────────────────────────────────── */}
-      <nav className="bg-[#2e7d32] text-white text-xs hidden lg:block sticky top-[69px] z-30">
-        <div className="max-w-7xl mx-auto px-4 flex">
-          {navigation.map((item) => {
-            const isActive = location.pathname === item.href ||
-              (item.href !== '/' && location.pathname.startsWith(item.href));
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`flex items-center gap-1.5 px-4 py-3 border-r border-[#388e3c] last:border-0 transition-colors whitespace-nowrap ${
-                  isActive
-                    ? 'bg-[#1b5e20] font-bold border-b-2 border-white'
-                    : 'hover:bg-[#1b5e20]'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                {item.name}
-              </Link>
-            );
-          })}
-        </div>
+      {/* ── Green nav bar (full width, desktop) ──────────────────────── */}
+      <nav className="bg-[#2e7d32] text-white text-xs hidden lg:flex sticky top-[65px] z-30">
+        {navigation.map((item) => {
+          const isActive =
+            location.pathname === item.href ||
+            (item.href !== '/' && location.pathname.startsWith(item.href));
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.name}
+              to={item.href}
+              className={`flex items-center gap-1.5 px-5 py-3 border-r border-[#388e3c] last:border-0 whitespace-nowrap transition-colors ${
+                isActive ? 'bg-[#1b5e20] font-bold' : 'hover:bg-[#1b5e20]'
+              }`}
+            >
+              <Icon className="w-3.5 h-3.5" />
+              {item.name}
+            </Link>
+          );
+        })}
       </nav>
 
       {/* ── Mobile nav overlay ───────────────────────────────────────── */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-30 bg-black bg-opacity-50" onClick={() => setMobileMenuOpen(false)}>
-          <nav className="absolute left-0 top-[116px] w-64 bg-white shadow-xl overflow-y-auto max-h-[80vh]">
-            <div className="bg-[#2e7d32] px-4 py-3 text-white text-sm font-semibold">
-              {user?.firstName} {user?.lastName}
+        <div
+          className="lg:hidden fixed inset-0 z-30 bg-black bg-opacity-50"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <nav className="absolute left-0 top-0 w-64 bg-white shadow-xl h-full overflow-y-auto">
+            <div className="bg-[#2e7d32] px-4 py-4 text-white">
+              <p className="font-bold">{user?.firstName} {user?.lastName}</p>
+              <p className="text-xs text-green-200 capitalize">{user?.role}</p>
             </div>
             {navigation.map((item) => {
               const isActive = location.pathname === item.href;
@@ -129,9 +133,7 @@ export default function Layout() {
                   to={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 px-5 py-4 border-b border-gray-100 text-sm ${
-                    isActive
-                      ? 'bg-green-50 text-[#2e7d32] font-bold'
-                      : 'text-gray-700 hover:bg-green-50'
+                    isActive ? 'bg-green-50 text-[#2e7d32] font-bold' : 'text-gray-700 hover:bg-green-50'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -141,7 +143,7 @@ export default function Layout() {
             })}
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 px-5 py-4 text-sm text-red-600 hover:bg-red-50 w-full"
+              className="flex items-center gap-3 px-5 py-4 text-sm text-red-600 hover:bg-red-50 w-full border-t border-gray-200"
             >
               <LogOut className="w-5 h-5" /> Logout
             </button>
@@ -149,15 +151,15 @@ export default function Layout() {
         </div>
       )}
 
-      {/* ── Main content ─────────────────────────────────────────────── */}
-      <main className="flex-1 w-full px-4 py-6">
+      {/* ── Main content (full width, small padding) ─────────────────── */}
+      <main className="flex-1 w-full p-4">
         <Outlet />
       </main>
 
-      {/* ── Footer ───────────────────────────────────────────────────── */}
-      <footer className="bg-[#1a3a1a] text-green-300 text-xs py-3 px-4 text-center mt-auto">
-        PulseSathi — पल्ससाथी | Medication Adherence Management | CaseBlitz 2026 |
-        <span className="text-green-400"> Demo Mode Active</span>
+      {/* ── Footer (full width) ──────────────────────────────────────── */}
+      <footer className="bg-[#1a3a1a] text-green-300 text-xs py-3 px-4 text-center">
+        PulseSathi — पल्ससाथी &nbsp;|&nbsp; Medication Adherence Management &nbsp;|&nbsp; CaseBlitz 2026 &nbsp;|&nbsp;
+        <span className="text-green-400">Demo Mode Active</span>
       </footer>
     </div>
   );
