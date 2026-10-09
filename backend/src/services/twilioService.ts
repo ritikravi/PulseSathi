@@ -1,10 +1,13 @@
 import twilio from 'twilio';
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID || '';
-const authToken = process.env.TWILIO_AUTH_TOKEN || '';
-const fromNumber = process.env.TWILIO_WHATSAPP_FROM || 'whatsapp:+14155238886'; // Twilio sandbox number
+function getClient() {
+  const accountSid = process.env.TWILIO_ACCOUNT_SID || '';
+  const authToken = process.env.TWILIO_AUTH_TOKEN || '';
+  if (!accountSid || !authToken) return null;
+  return twilio(accountSid, authToken);
+}
 
-const client = accountSid && authToken ? twilio(accountSid, authToken) : null;
+const fromNumber = () => process.env.TWILIO_WHATSAPP_FROM || 'whatsapp:+17372508034';
 
 interface ReminderData {
   patientName: string;
@@ -21,6 +24,7 @@ export async function sendWhatsAppReminder(
   scheduleId: string
 ): Promise<{ success: boolean; messageId?: string; error?: string }> {
   const mode = process.env.WHATSAPP_MODE || 'mock';
+  const client = getClient();
 
   if (mode === 'mock' || !client) {
     const mockId = `mock_twilio_${Date.now()}`;
@@ -32,11 +36,13 @@ export async function sendWhatsAppReminder(
 
   try {
     const body = formatMessage(data, scheduleId);
+    // Use Twilio's approved hello_world template for trial accounts
     const msg = await client.messages.create({
-      from: fromNumber,
+      from: fromNumber(),
       to: `whatsapp:${toPhone}`,
-      body,
-    });
+      contentSid: 'HXb5b62575e6e4ff6129ad7c8efe1f983e', // Twilio hello_world template
+      contentVariables: JSON.stringify({ '1': data.patientName }),
+    } as any);
     return { success: true, messageId: msg.sid };
   } catch (err: any) {
     console.error('Twilio error:', err.message);

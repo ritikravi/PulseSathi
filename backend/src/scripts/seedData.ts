@@ -45,8 +45,8 @@ async function seed() {
     role: 'patient',
     firstName: 'Suresh',
     lastName: 'Kumar',
-    phone: '+919876543210',
-    whatsappPhone: '+919876543210',
+    phone: '+919117328809',
+    whatsappPhone: '+919117328809',
     whatsappVerified: true,
     preferredLanguage: 'hi',
     timezone: 'Asia/Kolkata',
@@ -100,7 +100,7 @@ async function seed() {
   // ── 5. WHATSAPP CONSENT ────────────────────────────────────────────────────
   await WhatsAppConsent.create({
     patientId: patient._id,
-    whatsappPhone: '+919876543210',
+    whatsappPhone: '+919117328809',
     consentGiven: true,
     isActive: true,
     consentDate: new Date(),
