@@ -74,7 +74,7 @@ export default function LoginPage() {
 
           {/* Right: Big tagline fills remaining space */}
           <div className="flex-1 hidden sm:block">
-            <p className="text-2xl sm:text-3xl font-bold text-gray-800 leading-tight">
+            <p className="text-3xl sm:text-4xl font-extrabold text-[#2e7d32] leading-tight">
               Medication Adherence Management System
             </p>
             <p className="text-sm text-gray-500 mt-0.5">
