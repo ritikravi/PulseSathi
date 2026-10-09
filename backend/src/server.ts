@@ -60,6 +60,8 @@ const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
   message: 'Too many requests from this IP, please try again later.',
+  // Twilio delivers every patient's replies from a shared pool of IPs
+  skip: (req) => req.path === '/twilio/webhook',
 });
 app.use('/api/', limiter);
 

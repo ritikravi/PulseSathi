@@ -36,6 +36,16 @@ services:
         sync: false
       - key: WHATSAPP_APP_SECRET
         sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_WHATSAPP_FROM
+        value: whatsapp:+14155238886
+      - key: TWILIO_REMINDER_CONTENT_SID
+        sync: false
+      - key: PUBLIC_BASE_URL
+        value: https://pulseloop-backend-5il0.onrender.com
       - key: REMINDER_CHECK_INTERVAL_MS
         value: 60000
       - key: REMINDER_MAX_PER_DOSE
